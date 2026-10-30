@@ -1,6 +1,6 @@
 exercise,fitnotes_category,load_type,equipment,primary_muscles,secondary_muscles,import_load_rule,tags,confidence,review_note
 45 Back Extension,Hamstrings,bodyweight,bench,lower_back;glutes,hamstrings,,,high,
-ATG Split Squats,Legs,external,dumbbell,quads;glutes,adductors,,kneesovertoesguy,medium,Top weight may be body weight logged as load; check
+ATG Split Squats,Legs,bodyweight_plus,dumbbell,quads;glutes,adductors,bw_threshold_60,kneesovertoesguy,high,Logged weight >= 60 kg is body weight (added load 0); < 60 kg is belt load
 Ab-Wheel Rollout,Abs,bodyweight,wheel,abs,,,,high,
 Abduction Machine,Glutes,external,machine,glute_medius,glutes,zero_is_machine_base,,high,
 Adduction Machine,Legs,external,machine,adductors,,zero_is_machine_base,,high,
@@ -17,15 +17,15 @@ Cable Overhead Triceps Extension,Triceps,external,cable,triceps,,,,high,
 Cable Roll Wrist,Forearms,external,cable,forearm_flexors;forearm_extensors,,,,high,
 Cable Upright Rows,Shoulders,external,cable,side_delts;upper_traps,front_delts;biceps,,,high,
 DB Bench Supported Row,Back,external,dumbbell,upper_back;lats,rear_delts;biceps,,,high,
-DB Upright Rows,Shoulders,external,dumbbell,side_delts;upper_traps,front_delts,,,medium,All sets at 0 kg: missing weight?
+DB Upright Rows,Shoulders,external,dumbbell,side_delts;upper_traps,front_delts,zero_is_missing,,high,Weight was not logged
 Db Inverted Curl,Biceps,external,dumbbell,brachialis;forearm_extensors,biceps,,,high,
 Db Lunges,Legs,external,dumbbell,quads;glutes,adductors;hamstrings,,,high,
 Db Pullover,Back,external,dumbbell,lats,chest;triceps,,,high,
 Decline Crunch,Abs,bodyweight,bench,abs,hip_flexors,,,high,
 Decline Skullcrusher,Triceps,external,ez_bar,triceps,,,,high,
-Dips,Chest,bodyweight_plus,dip_station,chest;triceps,front_delts,,,high,Weight logged = body weight
-Dips Machine,Triceps,external,machine,triceps;chest,front_delts,zero_is_machine_base,,medium,Assisted or loaded machine? Check
-Donkey Calf Raise,Calves,bodyweight_plus,machine,calves,,,,low,Top weight looks like body weight; some sets at 0 kg
+Dips,Chest,bodyweight_plus,dip_station,chest;triceps,front_delts,bw_threshold_60,,high,Logged weight >= 60 kg is body weight (added load 0); < 60 kg is belt load
+Dips Machine,Triceps,external,machine,triceps;chest,front_delts,zero_is_machine_base,,high,"Plate-loaded machine, adds load"
+Donkey Calf Raise,Calves,bodyweight_plus,machine,calves,,bw_threshold_60,,high,Logged weight >= 60 kg is body weight (added load 0); < 60 kg is belt load
 Double Rope Push Down,Triceps,external,cable,triceps,,,,high,
 Dragon Flag,Abs,bodyweight,bench,abs,hip_flexors;lower_back,,,high,
 Dumbbell Curl,Biceps,external,dumbbell,biceps,brachialis,,,high,
@@ -69,9 +69,9 @@ Machine Shrug,Back,external,machine,upper_traps,forearm_flexors,zero_is_machine_
 Neutral Chin Up,Back,bodyweight_plus,bar,lats,biceps;brachialis;upper_back,bw_threshold_60,,high,Logged weight >= 60 kg is body weight (added load 0); < 60 kg is belt load
 Nordic Curls,Hamstrings,bodyweight,floor,hamstrings,,,kneesovertoesguy,high,
 One Arm Rope Pushdown,Triceps,external,cable,triceps,,,,high,
-One Leg Donkey Calf Raise,Calves,bodyweight_plus,machine,calves,,,,low,Top weight looks like body weight
+One Leg Donkey Calf Raise,Calves,bodyweight_plus,machine,calves,,bw_threshold_60,,high,Logged weight >= 60 kg is body weight (added load 0); < 60 kg is belt load
 Overhand Pull Up,Back,bodyweight_plus,bar,lats;upper_back,biceps;rear_delts,bw_threshold_60,,high,Logged weight >= 60 kg is body weight (added load 0); < 60 kg is belt load
-Parallel Bar Triceps Dip,Triceps,bodyweight_plus,dip_station,triceps,chest;front_delts,,,high,Weight logged = body weight
+Parallel Bar Triceps Dip,Triceps,bodyweight_plus,dip_station,triceps,chest;front_delts,bw_threshold_60,,high,Logged weight >= 60 kg is body weight (added load 0); < 60 kg is belt load
 Pendulum Squat Machine,Legs,external,machine,quads;glutes,adductors,zero_is_machine_base,,high,
 Poliquin Step Up,KneesOverToesGuy,bodyweight,step,quads,,,kneesovertoesguy,high,VMO-focused
 Pull Up,Back,bodyweight_plus,bar,lats,biceps;upper_back;brachialis,bw_threshold_60,,high,Logged weight >= 60 kg is body weight (added load 0); < 60 kg is belt load
