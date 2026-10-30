@@ -5,7 +5,7 @@ from decimal import Decimal
 
 import pytest
 from sqlalchemy import func, select
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import DataError, IntegrityError
 
 from app.models import (
     Exercise,
@@ -107,7 +107,8 @@ def test_set_check_constraints(db_session, user, bench, bad) -> None:
     w.exercises.append(we)
     we.sets.append(WorkoutSet(position=0, **bad))
     db_session.add(w)
-    with pytest.raises(IntegrityError):
+    # Unknown enum values can hit the varchar length before the check constraint.
+    with pytest.raises((IntegrityError, DataError)):
         db_session.flush()
 
 
