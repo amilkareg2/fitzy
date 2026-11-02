@@ -5,7 +5,7 @@ variable "project_id" {
 }
 
 variable "region" {
-  description = "Region for the state bucket, Artifact Registry, Cloud Run and Cloud SQL."
+  description = "Region for the state bucket, Artifact Registry and Cloud Run."
   type        = string
   default     = "europe-west1"
 }
