@@ -12,7 +12,7 @@ Backlog: Todoist project "FitNotes AI", one section per milestone (M0–M6).
 | `backend/` | FastAPI + SQLAlchemy 2 + Alembic, Python, managed with `uv` |
 | `frontend/` | React + Vite + TypeScript PWA, managed with `npm` |
 | `infra/bootstrap/` | One-time GCP setup (state bucket, deployer SA, Workload Identity Federation) |
-| `infra/main/` | App stack: Cloud Run, Cloud SQL (Postgres 16 + pgvector), Secret Manager |
+| `infra/main/` | Cloud Run, Secret Manager; database is Neon serverless Postgres (created by hand) |
 | `data/` | Reference data committed to the repo (muscle taxonomy, exercise mapping). Never raw personal exports |
 | `.github/workflows/` | CI (lint, tests, secret scan, terraform validate) and deploy |
 

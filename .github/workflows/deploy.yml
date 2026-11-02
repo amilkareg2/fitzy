@@ -16,7 +16,7 @@ jobs:
     name: Build, migrate, apply
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 45 # the first run creates Cloud SQL (~10-15 min)
+    timeout-minutes: 20
     concurrency:
       group: deploy-production
       cancel-in-progress: false
@@ -57,6 +57,19 @@ jobs:
 
       - uses: google-github-actions/setup-gcloud@v2
 
+      # The Neon connection string is added by the owner by hand (bootstrap README,
+      # step 3). Fail early with a clear message instead of a Terraform "not found".
+      # Only lists version metadata; the deployer cannot read the value.
+      - name: Check database secret has a version
+        run: |
+          latest="$(gcloud secrets versions list fitzy-database-url --project "$PROJECT_ID" \
+            --filter="state=ENABLED" --sort-by="~createTime" --limit=1 --format="value(name)")"
+          if [ -z "$latest" ]; then
+            echo "::error::Secret fitzy-database-url has no enabled version. Add the Neon connection string (infra/bootstrap/README.md, step 3)."
+            exit 1
+          fi
+          echo "fitzy-database-url latest enabled version: ${latest##*/}"
+
       - name: Build and push API image
         run: |
           gcloud auth configure-docker "${REGION}-docker.pkg.dev" --quiet
@@ -84,8 +97,9 @@ jobs:
             -var "migrate_image=${IMAGE}" \
             -var "api_image=${current}"
 
-      # Migrations run inside GCP as fitzy-runtime, through the same Cloud SQL socket
-      # the API uses. The DB password never reaches the runner.
+      # Migrations run inside GCP as fitzy-runtime, connecting to Neon over TLS with the
+      # same pinned DATABASE_URL secret version as the API. The connection string never
+      # reaches the runner. A suspended Neon compute wakes on the first connection.
       - name: Run Alembic migrations
         run: gcloud run jobs execute fitzy-migrate --region "$REGION" --wait
 

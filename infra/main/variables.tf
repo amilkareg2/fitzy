@@ -4,7 +4,7 @@ variable "project_id" {
 }
 
 variable "region" {
-  description = "Region for Cloud Run and Cloud SQL."
+  description = "Region for Cloud Run (Neon lives in AWS eu-central-1, set up by hand)."
   type        = string
   default     = "europe-west1"
 }
@@ -39,31 +39,9 @@ variable "container_port" {
 }
 
 variable "max_instances" {
-  description = "Upper bound on Cloud Run instances (also caps DB connections)."
+  description = "Upper bound on Cloud Run instances (also caps connections to Neon)."
   type        = number
   default     = 2
-}
-
-variable "db_tier" {
-  description = <<-EOT
-    Cloud SQL machine tier. db-f1-micro is the cheapest shared-core tier; shared-core
-    tiers are only available in the ENTERPRISE edition (not ENTERPRISE_PLUS) and are
-    not covered by the Cloud SQL SLA. Fine for a single user.
-  EOT
-  type        = string
-  default     = "db-f1-micro"
-}
-
-variable "db_disk_type" {
-  description = "PD_SSD or PD_HDD. Cannot be changed after the instance is created."
-  type        = string
-  default     = "PD_SSD"
-}
-
-variable "db_disk_size_gb" {
-  description = "Initial disk size in GB (10 is the minimum). Autoresize grows it if needed."
-  type        = number
-  default     = 10
 }
 
 variable "app_env" {

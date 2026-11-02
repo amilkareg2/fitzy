@@ -13,12 +13,7 @@ output "migrate_job" {
   value       = google_cloud_run_v2_job.migrate.name
 }
 
-output "sql_instance" {
-  description = "Cloud SQL instance name (for gcloud sql instances patch/describe)."
-  value       = google_sql_database_instance.main.name
-}
-
-output "sql_connection_name" {
-  description = "PROJECT:REGION:INSTANCE, for the Cloud SQL Auth Proxy."
-  value       = google_sql_database_instance.main.connection_name
+output "database_url_version" {
+  description = "Version of fitzy-database-url the service and job are pinned to."
+  value       = data.google_secret_manager_secret_version.database_url.version
 }

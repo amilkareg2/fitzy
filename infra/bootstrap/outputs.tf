@@ -18,6 +18,11 @@ output "tfstate_bucket" {
   value       = google_storage_bucket.tfstate.name
 }
 
+output "database_url_secret" {
+  description = "Secret the owner adds the Neon connection string to (README step 3)."
+  value       = google_secret_manager_secret.app["database_url"].secret_id
+}
+
 output "artifact_registry_repository" {
   description = "Docker repository CI pushes images to."
   value       = "${google_artifact_registry_repository.fitzy.location}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.fitzy.repository_id}"
