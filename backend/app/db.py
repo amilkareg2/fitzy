@@ -15,10 +15,13 @@ def get_engine() -> Engine:
     return create_engine(
         settings.database_url,
         pool_pre_ping=True,
-        # Cloud Run scales to zero; keep the pool small and fail fast if the DB is unreachable.
+        # Cloud Run scales to zero; keep the pool small.
         pool_size=5,
         max_overflow=5,
-        connect_args={"connect_timeout": 5},
+        # Neon suspends its compute after 5 idle minutes and drops open connections:
+        # recycle before that, and allow time for a cold start on the first connect.
+        pool_recycle=240,
+        connect_args={"connect_timeout": 15},
     )
 
 
