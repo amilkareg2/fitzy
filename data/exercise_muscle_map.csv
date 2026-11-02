@@ -1,0 +1,108 @@
+exercise,fitnotes_category,load_type,equipment,primary_muscles,secondary_muscles,import_load_rule,tags,confidence,review_note
+45 Back Extension,Hamstrings,bodyweight,bench,lower_back;glutes,hamstrings,,,high,
+ATG Split Squats,Legs,bodyweight_plus,dumbbell,quads;glutes,adductors,bw_threshold_60,kneesovertoesguy,high,Logged weight >= 60 kg is body weight (added load 0); < 60 kg is belt load
+Ab-Wheel Rollout,Abs,bodyweight,wheel,abs,,,,high,
+Abduction Machine,Glutes,external,machine,glute_medius,glutes,zero_is_machine_base,,high,
+Adduction Machine,Legs,external,machine,adductors,,zero_is_machine_base,,high,
+Barbell Calf Raise,Legs,bodyweight,none,calves,,,,high,Done without added weight
+Barbell Curl,Biceps,external,barbell,biceps,brachialis;forearm_flexors,,,high,
+Barbell Row,Back,external,barbell,upper_back;lats,rear_delts;biceps;lower_back,,,high,
+Behind The Neck Barbell Press,Shoulders,external,barbell,front_delts;side_delts,triceps;upper_traps,,,high,
+Cable Curl,Biceps,external,cable,biceps,brachialis,,,high,
+Cable Face Pull,Shoulders,external,cable,rear_delts,upper_back;upper_traps,,,high,
+Cable Hammer Curls,Biceps,external,cable,brachialis;biceps,forearm_extensors,,,high,
+Cable Inverted Curls,Biceps,external,cable,brachialis;forearm_extensors,biceps,,,high,Reverse-grip curl
+Cable Lateral Raise,Shoulders,external,cable,side_delts,,,,high,
+Cable Overhead Triceps Extension,Triceps,external,cable,triceps,,,,high,
+Cable Roll Wrist,Forearms,external,cable,forearm_flexors;forearm_extensors,,,,high,
+Cable Upright Rows,Shoulders,external,cable,side_delts;upper_traps,front_delts;biceps,,,high,
+DB Bench Supported Row,Back,external,dumbbell,upper_back;lats,rear_delts;biceps,,,high,
+DB Upright Rows,Shoulders,external,dumbbell,side_delts;upper_traps,front_delts,zero_is_missing,,high,Weight was not logged
+Db Inverted Curl,Biceps,external,dumbbell,brachialis;forearm_extensors,biceps,,,high,
+Db Lunges,Legs,external,dumbbell,quads;glutes,adductors;hamstrings,,,high,
+Db Pullover,Back,external,dumbbell,lats,chest;triceps,,,high,
+Decline Crunch,Abs,bodyweight,bench,abs,hip_flexors,,,high,
+Decline Skullcrusher,Triceps,external,ez_bar,triceps,,,,high,
+Dips,Chest,bodyweight_plus,dip_station,chest;triceps,front_delts,bw_threshold_60,,high,Logged weight >= 60 kg is body weight (added load 0); < 60 kg is belt load
+Dips Machine,Triceps,external,machine,triceps;chest,front_delts,zero_is_machine_base,,high,"Plate-loaded machine, adds load"
+Donkey Calf Raise,Calves,bodyweight_plus,machine,calves,,bw_threshold_60,,high,Logged weight >= 60 kg is body weight (added load 0); < 60 kg is belt load
+Double Rope Push Down,Triceps,external,cable,triceps,,,,high,
+Dragon Flag,Abs,bodyweight,bench,abs,hip_flexors;lower_back,,,high,
+Dumbbell Curl,Biceps,external,dumbbell,biceps,brachialis,,,high,
+Dumbbell Hammer Curl,Biceps,external,dumbbell,brachialis;biceps,forearm_extensors,,,high,
+Dumbbell Overhead Triceps Extension,Triceps,external,dumbbell,triceps,,,,high,
+Dumbbell Row,Back,external,dumbbell,lats;upper_back,rear_delts;biceps,,,high,
+EZ-Bar Curl,Biceps,external,ez_bar,biceps,brachialis,,,high,
+EZ-Bar Inverted Curl,Biceps,external,ez_bar,brachialis;forearm_extensors,biceps,,,high,15 sets at 0 kg: empty bar?
+EZ-Bar Preacher Curl,Biceps,external,ez_bar,biceps,brachialis,,,high,
+EZ-Bar Skullcrusher,Triceps,external,ez_bar,triceps,,,,high,
+Flat Dumbbell Fly,Chest,external,dumbbell,chest,front_delts,,,high,
+Frog Pumps,Glutes,external,dumbbell,glutes,,,,high,
+Front Bar Raises,Shoulders,external,barbell,front_delts,side_delts,,,high,
+GHR Crunches,Abs,bodyweight,ghr,abs,hip_flexors,,,high,
+Glute Bridge,Glutes,external,barbell,glutes,hamstrings,,,high,
+Glute Medius Side Bend,Glutes,external,dumbbell,glute_medius,obliques,,,high,Bret Contreras glute medius exercise
+Goblet Sumo Squats,Legs,external,dumbbell,quads;adductors;glutes,,,,high,
+Hack Deficit Split Squads,Legs,external,machine,glutes,hamstrings,zero_is_machine_base,,high,
+Hack Good Mornings,Legs,external,machine,hamstrings;glutes,lower_back,zero_is_machine_base,,high,
+Hammer Strength Row,Back,external,machine,upper_back;lats,rear_delts;biceps,zero_is_machine_base,,high,
+Hammer Strength Shoulder Press,Shoulders,external,machine,front_delts,side_delts;triceps,zero_is_machine_base,,high,
+Hanging Knee Raise,Abs,bodyweight,bar,abs,hip_flexors,,,high,
+Hanging Leg Raise,Abs,bodyweight,bar,abs;hip_flexors,forearm_flexors,,,high,
+Hanging Leg Raise + Obliques,Abs,bodyweight,bar,abs;obliques,hip_flexors,,,high,
+Hip Thrust,Glutes,external,barbell,glutes,hamstrings,,,high,
+Incline Barbell Bench Press,Chest,external,barbell,chest;front_delts,triceps,,,high,
+Incline Dumbbell Bench Press,Chest,external,dumbbell,chest;front_delts,triceps,,,high,
+Incline Hammer Strength Chest Press,Chest,external,machine,chest;front_delts,triceps,zero_is_machine_base,,high,
+Inverted Rows,Back,bodyweight,bar,upper_back;lats,rear_delts;biceps,,,high,
+Lat Prayer,Back,external,cable,lats,triceps,,,high,
+Lat Pulldown,Back,external,cable,lats,biceps;upper_back;brachialis,,,high,
+Lateral Dumbbell Raise,Shoulders,external,dumbbell,side_delts,,,,high,
+Lateral Machine Raise,Shoulders,external,machine,side_delts,,zero_is_machine_base,,high,
+Leg Extension Machine,Legs,external,machine,quads,,zero_is_machine_base,,high,
+Leg Press,Legs,external,machine,quads;glutes,adductors,zero_is_machine_base,,high,
+Lying Leg Curl Machine,Hamstrings,external,machine,hamstrings,calves,zero_is_machine_base,,high,
+Lying Leg Raise,Abs,bodyweight,floor,abs;hip_flexors,,,,high,
+Machine Kickback,Glutes,external,machine,glutes,hamstrings,zero_is_machine_base,,high,0 kg = machine's own resistance
+Machine Press,Chest,external,machine,chest,front_delts;triceps,zero_is_machine_base,,high,
+Machine Shrug,Back,external,machine,upper_traps,forearm_flexors,zero_is_machine_base,,high,
+Neutral Chin Up,Back,bodyweight_plus,bar,lats,biceps;brachialis;upper_back,bw_threshold_60,,high,Logged weight >= 60 kg is body weight (added load 0); < 60 kg is belt load
+Nordic Curls,Hamstrings,bodyweight,floor,hamstrings,,,kneesovertoesguy,high,
+One Arm Rope Pushdown,Triceps,external,cable,triceps,,,,high,
+One Leg Donkey Calf Raise,Calves,bodyweight_plus,machine,calves,,bw_threshold_60,,high,Logged weight >= 60 kg is body weight (added load 0); < 60 kg is belt load
+Overhand Pull Up,Back,bodyweight_plus,bar,lats;upper_back,biceps;rear_delts,bw_threshold_60,,high,Logged weight >= 60 kg is body weight (added load 0); < 60 kg is belt load
+Parallel Bar Triceps Dip,Triceps,bodyweight_plus,dip_station,triceps,chest;front_delts,bw_threshold_60,,high,Logged weight >= 60 kg is body weight (added load 0); < 60 kg is belt load
+Pendulum Squat Machine,Legs,external,machine,quads;glutes,adductors,zero_is_machine_base,,high,
+Poliquin Step Up,KneesOverToesGuy,bodyweight,step,quads,,,kneesovertoesguy,high,VMO-focused
+Pull Up,Back,bodyweight_plus,bar,lats,biceps;upper_back;brachialis,bw_threshold_60,,high,Logged weight >= 60 kg is body weight (added load 0); < 60 kg is belt load
+Push Ups,Chest,bodyweight_plus,floor,chest;triceps,front_delts;abs,,,high,Weight logged = body weight
+Rear Delt Machine Fly,Shoulders,external,machine,rear_delts,upper_back,zero_is_machine_base,,high,0 kg = machine's own resistance
+Reverse Walking,KneesOverToesGuy,bodyweight,sled,quads,calves,,kneesovertoesguy,high,"Conditioning, low volume weight"
+Roll Wrists,Forearms,external,wrist_roller,forearm_flexors;forearm_extensors,,,,high,
+Romanian Deadlift,Hamstrings,external,barbell,hamstrings;glutes,lower_back;forearm_flexors,,,high,
+Rope Push Down,Triceps,external,cable,triceps,,,,high,
+Seated Cable Back Extension,Back,external,cable,lower_back,glutes,,,high,
+Seated Cable Row,Back,external,cable,upper_back;lats,biceps;rear_delts,,,high,
+Seated Calf Raise Machine,Calves,external,machine,calves,,zero_is_machine_base,,high,Soleus-biased
+Seated Dumbbell Press,Shoulders,external,dumbbell,front_delts,side_delts;triceps,,,high,
+Seated Hammer DB Curls,Biceps,external,dumbbell,brachialis;biceps,forearm_extensors,,,high,
+Seated Incline Dumbbell Curl,Biceps,external,dumbbell,biceps,brachialis,,,high,
+Seated Leg Curl Machine,Hamstrings,external,machine,hamstrings,,zero_is_machine_base,,high,
+Seated Machine Lateral Raise,Shoulders,external,machine,side_delts,,zero_is_machine_base,,high,
+Side Oblique Standing Crunch,Abs,external,dumbbell,obliques,abs,,,high,
+Single Leg Extension,Legs,external,machine,quads,,zero_is_machine_base,,high,0 kg = machine's own resistance
+Sled Pushes 10 Yards,GST,external,sled,quads;glutes,calves,,gst,high,Conditioning
+Smith Squats,Legs,external,smith,quads;glutes,adductors,,,high,
+Standing Calf Raise Machine,Calves,external,machine,calves,,zero_is_machine_base,,high,
+Standing Single Leg Curl,Hamstrings,external,machine,hamstrings,,zero_is_machine_base,,high,
+Step Ups,Glutes,bodyweight,step,quads;glutes,,,,high,
+Stiff-Legged Deadlift,Hamstrings,external,barbell,hamstrings;glutes,lower_back,,,high,
+Straight-Arm Cable Pushdown,Back,external,cable,lats,triceps,,,high,
+T-Bar Row,Back,external,barbell,upper_back;lats,rear_delts;biceps;lower_back,,,high,
+T-bar Supported Chest Row,Back,external,machine,upper_back;lats,rear_delts;biceps,zero_is_machine_base,,high,
+Underhand Pull Up,Back,bodyweight_plus,bar,lats;biceps,upper_back;brachialis,bw_threshold_60,,high,Logged weight >= 60 kg is body weight (added load 0); < 60 kg is belt load
+Upright Rows,Shoulders,external,barbell,side_delts;upper_traps,front_delts,,,high,
+V-Bar Push Down,Triceps,external,cable,triceps,,,,high,
+Wall Tibial Raise,Calves,bodyweight,wall,tibialis,,,kneesovertoesguy,high,
+Wrist Curls,Forearms,external,dumbbell,forearm_flexors,,,,high,
+Zotmann Curls,Biceps,external,dumbbell,biceps;brachialis,forearm_extensors,,,high,

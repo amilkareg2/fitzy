@@ -1,0 +1,43 @@
+# Generates uv.lock and package-lock.json and commits them to the branch.
+# Needed because the authoring environment cannot reach PyPI or npm.
+# Runs on pushes to feature branches that change dependencies; commits made with
+# GITHUB_TOKEN do not trigger new workflow runs, so this cannot loop.
+name: Lockfiles
+
+on:
+  push:
+    branches-ignore: [main]
+    paths:
+      - backend/pyproject.toml
+      - frontend/package.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: Lock backend
+        working-directory: backend
+        run: uv lock
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Lock frontend
+        working-directory: frontend
+        run: npm install --package-lock-only --ignore-scripts
+      - name: Commit lockfiles
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add backend/uv.lock frontend/package-lock.json
+          if git diff --cached --quiet; then
+            echo "Lockfiles already up to date"
+          else
+            git commit -m "Generate lockfiles"
+            git push
+          fi
