@@ -169,3 +169,7 @@ Re-run `terraform apply` here after editing. The deployer cannot change any of t
 resources itself, by design. Destroying this stack revokes CI's access and deletes the
 secrets (including the database URL); destroy `infra/main` first if you want
 everything gone (see `../README.md`). The Neon project is deleted in the Neon console.
+
+## Read-only diagnostics (fitzy-ops)
+
+`ops_reader.tf` creates `fitzy-reader`, a service account with viewer roles only, usable from the private repo `amilkareg2/fitzy-ops` (main branch) through its own Workload Identity provider. Its **Diagnose** workflow runs read-only `gcloud` commands and reads a log view limited to Cloud Run, so debugging does not need anyone to copy logs out of Cloud Shell. `terraform output ops_variables` prints the values that workflow uses. The ops repo must stay private: its run logs contain app logs.
