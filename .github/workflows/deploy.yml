@@ -1,0 +1,126 @@
+name: Deploy
+
+# Called by ci.yml after all checks pass on a push to main (workflow_call), or run by
+# hand for a redeploy of main (workflow_dispatch). GCP only accepts OIDC tokens from
+# amilkareg2/fitzy on refs/heads/main, so running this from another branch fails at auth.
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    name: Build, migrate, apply
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    defaults:
+      run:
+        shell: bash
+    env:
+      PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+      REGION: ${{ vars.GCP_REGION }}
+      IMAGE: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/fitzy/api:${{ github.sha }}
+      TF_IN_AUTOMATION: "1"
+      TF_INPUT: "0"
+      TF_VAR_project_id: ${{ vars.GCP_PROJECT_ID }}
+      TF_VAR_region: ${{ vars.GCP_REGION }}
+      # Optional repository variable; empty means OWNER_EMAIL is not set in Cloud Run.
+      TF_VAR_owner_email: ${{ vars.FITZY_OWNER_EMAIL }}
+    steps:
+      - name: Check repository variables
+        env:
+          WIF_PROVIDER: ${{ vars.GCP_WIF_PROVIDER }}
+          DEPLOY_SA: ${{ vars.GCP_DEPLOY_SA }}
+        run: |
+          missing=0
+          for v in PROJECT_ID REGION WIF_PROVIDER DEPLOY_SA; do
+            if [ -z "${!v}" ]; then echo "::error::Repository variable for $v is not set (see infra/bootstrap/README.md)"; missing=1; fi
+          done
+          exit "$missing"
+
+      - uses: actions/checkout@v4
+
+      # Keyless: exchanges the GitHub OIDC token for a short-lived token of
+      # fitzy-deployer. No service-account key exists anywhere.
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SA }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      # The Neon connection string is added by the owner by hand (bootstrap README,
+      # step 3). Fail early with a clear message instead of a Terraform "not found".
+      # Only lists version metadata; the deployer cannot read the value.
+      - name: Check database secret has a version
+        run: |
+          latest="$(gcloud secrets versions list fitzy-database-url --project "$PROJECT_ID" \
+            --filter="state=ENABLED" --sort-by="~createTime" --limit=1 --format="value(name)")"
+          if [ -z "$latest" ]; then
+            echo "::error::Secret fitzy-database-url has no enabled version. Add the Neon connection string (infra/bootstrap/README.md, step 3)."
+            exit 1
+          fi
+          echo "fitzy-database-url latest enabled version: ${latest##*/}"
+
+      - name: Build and push API image
+        run: |
+          gcloud auth configure-docker "${REGION}-docker.pkg.dev" --quiet
+          docker build --pull -t "$IMAGE" -f backend/Dockerfile backend
+          docker push "$IMAGE"
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.8
+          terraform_wrapper: false
+
+      - name: terraform init
+        working-directory: infra/main
+        run: terraform init -backend-config="bucket=${PROJECT_ID}-fitzy-tfstate"
+
+      # Phase 1: converge infrastructure and point the migration job at the new image,
+      # while the service keeps running the image it already has (placeholder on the
+      # very first run). This also creates everything on the first deploy.
+      - name: terraform apply (infra + migration job)
+        working-directory: infra/main
+        run: |
+          current="$(terraform output -raw api_image 2>/dev/null || true)"
+          echo "Service keeps: ${current:-<placeholder>}"
+          terraform apply -auto-approve \
+            -var "migrate_image=${IMAGE}" \
+            -var "api_image=${current}"
+
+      # Migrations run inside GCP as fitzy-runtime, connecting to Neon over TLS with the
+      # same pinned DATABASE_URL secret version as the API. The connection string never
+      # reaches the runner. A suspended Neon compute wakes on the first connection.
+      - name: Run Alembic migrations
+        run: gcloud run jobs execute fitzy-migrate --region "$REGION" --wait
+
+      # Phase 2: only now switch the service to the new image.
+      - name: terraform apply (API service)
+        working-directory: infra/main
+        run: |
+          terraform apply -auto-approve \
+            -var "migrate_image=${IMAGE}" \
+            -var "api_image=${IMAGE}"
+          echo "API_URL=$(terraform output -raw api_url)" >> "$GITHUB_ENV"
+
+      - name: Smoke test
+        run: |
+          for i in 1 2 3 4 5 6; do
+            if curl -fsS --max-time 30 "${API_URL}/health"; then
+              echo; echo "### Deployed ${IMAGE}" >> "$GITHUB_STEP_SUMMARY"
+              echo "${API_URL}" >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::${API_URL}/health did not respond"
+          exit 1

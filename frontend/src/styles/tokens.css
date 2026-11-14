@@ -1,0 +1,83 @@
+/*
+ * Fitzy design tokens.
+ *
+ * Palette idea: a gym floor at night. Rubber-floor graphite surfaces, chalk-white
+ * text, and the four competition bumper-plate colours (25 red, 20 blue, 15 yellow,
+ * 10 green) used as the only accents. Each tab owns one plate colour, so colour
+ * always tells you where you are and never decorates.
+ *
+ * Dark is the default; light follows prefers-color-scheme.
+ */
+
+:root {
+  color-scheme: dark light;
+
+  /* Surfaces */
+  --floor: #1a1d21;
+  --floor-raised: #23272c;
+  --floor-sunk: #141619;
+  --line: #353a41;
+
+  /* Text */
+  --chalk: #f3f2ee;
+  --chalk-dim: #a3a9b1;
+
+  /* Plate accents */
+  --plate-red: #ef3b36;
+  --plate-blue: #4a86f0;
+  --plate-yellow: #f2c230;
+  --plate-green: #34b765;
+  --on-plate: #141619;
+
+  /* Status */
+  --ok: var(--plate-green);
+  --bad: var(--plate-red);
+
+  /* Type */
+  --font-display: 'Barlow Condensed', 'Arial Narrow', 'Roboto Condensed', sans-serif;
+  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  /* Modular scale, ratio 1.333 (perfect fourth) from a 17px base */
+  --text-sm: 0.875rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.416rem;
+  --text-xl: 1.888rem;
+  --text-2xl: 2.517rem;
+  --text-hero: 6.5rem;
+
+  /* Space (4px grid) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --gutter: 1rem;
+
+  /* Touch */
+  --touch-min: 48px;
+  --tabbar-height: 68px;
+
+  --radius-control: 6px;
+  --focus-ring: 3px solid var(--chalk);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --floor: #e8eaed;
+    --floor-raised: #ffffff;
+    --floor-sunk: #dcdfe3;
+    --line: #c3c8cf;
+
+    --chalk: #15181c;
+    --chalk-dim: #4f5661;
+
+    /* Darkened so plate colours keep >= 3:1 against the light floor */
+    --plate-red: #c8221d;
+    --plate-blue: #1f58bf;
+    --plate-yellow: #9a7300;
+    --plate-green: #1b7a40;
+    --on-plate: #ffffff;
+  }
+}

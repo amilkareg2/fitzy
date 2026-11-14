@@ -1,0 +1,43 @@
+# Secrets: never commit real values
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*-key.json
+service-account*.json
+credentials*.json
+
+# Personal data: raw exports stay local
+data/raw/
+*FitNotes_Export*.csv
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Node
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+.terraform.lock.hcl.bak
+crash.log
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "source": "https://github.com/neondatabase/agent-skills",
+  "commit": "d3da7cb5436edbb2bc8c00747fafd31ddf0644f4",
+  "note": "Installed by copying the default skill set (what 'npx neon skills -y' installs); npm is unreachable from the authoring environment. Re-run 'npx neon skills -y' locally to update.",
+  "skills": [
+    "neon",
+    "neon-ai-gateway",
+    "neon-auth",
+    "neon-functions",
+    "neon-object-storage",
+    "neon-postgres",
+    "neon-postgres-branches",
+    "neon-postgres-egress-optimizer",
+    "neon-realtime"
+  ]
+}

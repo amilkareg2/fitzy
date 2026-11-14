@@ -1,0 +1,13 @@
+# Only needed for manual runs (CI sets these through TF_VAR_* environment variables).
+# Copy to terraform.tfvars (git-ignored) and adjust.
+
+project_id = "mymancave"
+region     = "europe-west1"
+
+# Pass the image that is currently deployed, or the service reverts to the placeholder:
+#   terraform output -raw api_image
+api_image     = ""
+migrate_image = ""
+
+# owner_email = "you@example.com"
+# extra_env   = { CORS_ORIGINS = "https://fitzy.example.com" }

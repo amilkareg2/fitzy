@@ -1,0 +1,8 @@
+.shell {
+  min-height: 100dvh;
+}
+
+.main {
+  /* Keep content clear of the fixed tab bar and the home indicator. */
+  padding-bottom: calc(var(--tabbar-height) + env(safe-area-inset-bottom, 0px));
+}

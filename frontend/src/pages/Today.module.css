@@ -1,0 +1,57 @@
+/* The date is the hero: a scoreboard-sized day number you can read at arm's length. */
+.date {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-3);
+}
+
+.day {
+  font-size: var(--text-hero);
+  font-weight: 700;
+  line-height: 0.8;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0.15em;
+}
+
+.weekday {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.month {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--chalk-dim);
+}
+
+.start {
+  /* Primary action sits at the bottom of the page, in thumb reach above the tab bar. */
+  margin-top: auto;
+  width: 100%;
+  min-height: 64px;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--plate-red);
+  color: var(--on-plate);
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.start:disabled {
+  background: var(--floor-raised);
+  color: var(--chalk-dim);
+  border: 2px dashed var(--line);
+  cursor: not-allowed;
+}

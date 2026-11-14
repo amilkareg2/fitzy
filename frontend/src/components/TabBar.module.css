@@ -1,0 +1,77 @@
+.bar {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 10;
+  background: var(--floor-sunk);
+  border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+}
+
+.tab {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: var(--tabbar-height);
+  min-width: var(--touch-min);
+  padding: var(--space-2) var(--space-1);
+  color: var(--chalk-dim);
+  text-decoration: none;
+  touch-action: manipulation;
+}
+
+/* The plate stripe: a thick bar in the tab's plate colour along the top edge. */
+.tab::before {
+  content: '';
+  position: absolute;
+  inset: -1px 18% auto 18%;
+  height: 4px;
+  border-radius: 0 0 3px 3px;
+  background: var(--tab-accent);
+  transform: scaleX(0);
+  transition: transform 160ms ease-out;
+}
+
+.active {
+  color: var(--chalk);
+}
+
+.active::before {
+  transform: scaleX(1);
+}
+
+.active svg {
+  color: var(--tab-accent);
+}
+
+.tab:active {
+  background: var(--floor-raised);
+}
+
+.tab:focus-visible {
+  outline-offset: -4px;
+}
+
+.label {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
