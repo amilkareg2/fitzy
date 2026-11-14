@@ -17,6 +17,8 @@ permissions:
 
 jobs:
   lock:
+    # Dependabot updates lockfiles itself, and its runs get a read-only token.
+    if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
