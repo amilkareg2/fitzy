@@ -101,7 +101,9 @@ jobs:
       - name: terraform apply (infra + migration job)
         working-directory: infra/main
         run: |
-          current="$(terraform output -raw api_image 2>/dev/null || true)"
+          # Read via JSON: with no outputs yet (first deploy), `terraform output -raw`
+          # prints a warning to stdout and exits 0, which would become the image name.
+          current="$(terraform output -json | jq -r '.api_image.value // empty')"
           echo "Service keeps: ${current:-<placeholder>}"
           terraform apply -auto-approve \
             -var "migrate_image=${IMAGE}" \
