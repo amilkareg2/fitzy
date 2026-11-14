@@ -31,3 +31,13 @@ variable "deploy_ref" {
   type        = string
   default     = "refs/heads/main"
 }
+
+variable "ops_repository" {
+  description = <<-EOT
+    Private GitHub repository (owner/name) whose main-branch workflows may use the
+    read-only fitzy-reader account for diagnostics. It must stay private: Actions logs
+    of a public repository are public, and these logs contain app logs.
+  EOT
+  type        = string
+  default     = "amilkareg2/fitzy-ops"
+}

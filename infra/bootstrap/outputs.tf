@@ -37,3 +37,12 @@ output "github_variables" {
     GCP_DEPLOY_SA    = google_service_account.deployer.email
   }
 }
+
+output "ops_variables" {
+  description = "Values for the private ops repository's diagnostics workflow."
+  value = {
+    GCP_WIF_PROVIDER = google_iam_workload_identity_pool_provider.github_ops.name
+    GCP_READER_SA    = google_service_account.reader.email
+    LOG_VIEW         = google_logging_log_view.fitzy.id
+  }
+}
