@@ -299,10 +299,13 @@ resource "google_iam_workload_identity_pool_provider" "github" {
   }
 }
 
-# Defense in depth: even within the pool, only the exact subject
-# "repo:<owner>/<repo>:ref:<deploy_ref>" may impersonate the deployer.
+# Any token from this repository may impersonate the deployer. The provider's
+# attribute_condition above already rejects every token whose repository is not
+# this one or whose ref is not the deploy ref, so only main-branch runs get here.
+# Binding on the exact `sub` claim instead proved brittle: its format depends on
+# GitHub's OIDC subject settings, and a mismatch fails as a bare 403.
 resource "google_service_account_iam_member" "deployer_wif" {
   service_account_id = google_service_account.deployer.name
   role               = "roles/iam.workloadIdentityUser"
-  member             = "principal://iam.googleapis.com/${google_iam_workload_identity_pool.github.name}/subject/repo:${var.github_repository}:ref:${var.deploy_ref}"
+  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github.name}/attribute.repository/${var.github_repository}"
 }
