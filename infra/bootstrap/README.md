@@ -99,11 +99,10 @@ Then disable the old version: `gcloud secrets versions disable <N> --secret fitz
 ### 3b. Add your login password (as a hash)
 
 The app has one user, you, and logs you in with a password. Only a scrypt **hash** of it
-is stored; the password itself never leaves Cloud Shell. Still in Cloud Shell, from the
-repo root (`~/fitzy`), with at least 12 characters:
+is stored; the password itself never leaves Cloud Shell. Still in Cloud Shell (any folder), with at least 12 characters:
 
 ```bash
-python3 backend/app/security/passwords.py | tr -d '\n' > /tmp/fitzy-hash   # asks twice
+python3 ~/fitzy/backend/app/security/passwords.py | tr -d '\n' > /tmp/fitzy-hash   # asks twice
 gcloud secrets versions add fitzy-owner-password-hash --data-file=/tmp/fitzy-hash --project mymancave
 rm /tmp/fitzy-hash
 ```
