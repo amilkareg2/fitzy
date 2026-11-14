@@ -101,9 +101,16 @@ jobs:
       - name: terraform apply (infra + migration job)
         working-directory: infra/main
         run: |
-          # Read via JSON: with no outputs yet (first deploy), `terraform output -raw`
-          # prints a warning to stdout and exits 0, which would become the image name.
-          current="$(terraform output -json | jq -r '.api_image.value // empty')"
+          # Ask Cloud Run which image the service runs now, rather than Terraform:
+          # before the first successful apply there are no Terraform outputs, and
+          # newer Terraform versions print a "No outputs found" warning on stdout even
+          # with -json, which ended up as the image name. Anything that is not a
+          # registry image path (no service yet, an error) means "use the placeholder".
+          current="$(gcloud run services describe fitzy-api --region "$REGION" \
+            --format='value(spec.template.spec.containers[0].image)' 2>/dev/null || true)"
+          if ! [[ "$current" =~ ^[a-z0-9.-]+(\.gcr\.io|-docker\.pkg\.dev|docker\.io)/[^[:space:]]+$ ]]; then
+            current=""
+          fi
           echo "Service keeps: ${current:-<placeholder>}"
           terraform apply -auto-approve \
             -var "migrate_image=${IMAGE}" \
