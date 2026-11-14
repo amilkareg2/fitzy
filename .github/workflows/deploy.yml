@@ -45,7 +45,7 @@ jobs:
           done
           exit "$missing"
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # Prints the identity claims GCP will see (not the token itself), so an
       # IAM 403 on impersonation can be matched against the binding.
@@ -60,12 +60,12 @@ jobs:
       # Keyless: exchanges the GitHub OIDC token for a short-lived token of
       # fitzy-deployer. No service-account key exists anywhere.
       - id: auth
-        uses: google-github-actions/auth@v2
+        uses: google-github-actions/auth@v3
         with:
           workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
           service_account: ${{ vars.GCP_DEPLOY_SA }}
 
-      - uses: google-github-actions/setup-gcloud@v2
+      - uses: google-github-actions/setup-gcloud@v3
 
       # The Neon connection string is added by the owner by hand (bootstrap README,
       # step 3). Fail early with a clear message instead of a Terraform "not found".
@@ -86,7 +86,7 @@ jobs:
           docker build --pull -t "$IMAGE" -f backend/Dockerfile backend
           docker push "$IMAGE"
 
-      - uses: hashicorp/setup-terraform@v3
+      - uses: hashicorp/setup-terraform@v4
         with:
           terraform_version: 1.9.8
           terraform_wrapper: false
