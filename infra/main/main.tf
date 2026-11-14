@@ -33,6 +33,13 @@ data "google_secret_manager_secret_version" "database_url" {
   fetch_secret_data = false
 }
 
+# scrypt hash of the owner's password, added by hand (bootstrap README). Like the
+# database URL, only its version number is read; the value never enters state.
+data "google_secret_manager_secret_version" "owner_password_hash" {
+  secret            = "projects/${var.project_id}/secrets/fitzy-owner-password-hash"
+  fetch_secret_data = false
+}
+
 # Signing secret for the app's own auth. Generated here, so it is also in Terraform
 # state; the state bucket is private (owner + fitzy-deployer only).
 resource "random_password" "auth_secret" {
@@ -46,7 +53,7 @@ resource "google_secret_manager_secret_version" "auth_secret" {
 }
 
 locals {
-  # Pinned version numbers (not "latest"): adding a new version of either secret and
+  # Pinned version numbers (not "latest"): adding a new version of any secret and
   # redeploying rolls out a new revision that uses it.
   secret_env = {
     DATABASE_URL = {
@@ -56,6 +63,10 @@ locals {
     AUTH_SECRET = {
       secret  = "fitzy-auth-secret"
       version = google_secret_manager_secret_version.auth_secret.version
+    }
+    OWNER_PASSWORD_HASH = {
+      secret  = "fitzy-owner-password-hash"
+      version = data.google_secret_manager_secret_version.owner_password_hash.version
     }
   }
 }

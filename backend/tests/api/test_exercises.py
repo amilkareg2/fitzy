@@ -42,3 +42,7 @@ def test_requires_owner(client) -> None:
     assert client.get("/exercises").status_code == 401
     wrong = {"Authorization": "Bearer wrong"}
     assert client.get("/exercises", headers=wrong).status_code == 401
+
+
+def test_requires_login(client) -> None:
+    assert client.get("/exercises").status_code == 401

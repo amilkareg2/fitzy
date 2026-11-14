@@ -6,6 +6,8 @@ from typing import Literal
 from pydantic import SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from app.security.passwords import is_valid_hash
+
 DEFAULT_AUTH_SECRET = "change-me"  # noqa: S105 - placeholder, rejected outside local/test
 
 
@@ -16,6 +18,10 @@ class Settings(BaseSettings):
     app_env: Literal["local", "test", "dev", "prod"] = "local"
     auth_secret: SecretStr = SecretStr(DEFAULT_AUTH_SECRET)
     owner_email: str = "you@example.com"
+    # scrypt hash of the owner's password (app/security/passwords.py). Unset locally means
+    # login is disabled; outside local/test it is required.
+    owner_password_hash: SecretStr | None = None
+    session_days: int = 90
 
     @field_validator("database_url")
     @classmethod
@@ -33,6 +39,11 @@ class Settings(BaseSettings):
             or len(self.auth_secret.get_secret_value()) < 32
         ):
             raise ValueError("AUTH_SECRET must be set to a random value of 32+ chars outside local")
+        if self.app_env in ("dev", "prod") and (
+            self.owner_password_hash is None
+            or not is_valid_hash(self.owner_password_hash.get_secret_value())
+        ):
+            raise ValueError("OWNER_PASSWORD_HASH must be a scrypt hash outside local (see README)")
         return self
 
     @property

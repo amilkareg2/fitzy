@@ -16,6 +16,7 @@ import pytest
 
 BACKEND_DIR = Path(__file__).resolve().parent.parent
 TEST_AUTH_SECRET = "test-secret-" + "x" * 32
+TEST_PASSWORD = "correct horse battery staple"
 
 _db_url = os.environ.get("TEST_DATABASE_URL") or os.environ.get("DATABASE_URL")
 if _db_url:
@@ -23,6 +24,10 @@ if _db_url:
     os.environ["DATABASE_URL"] = _db_url
 os.environ.setdefault("APP_ENV", "test")
 os.environ["AUTH_SECRET"] = TEST_AUTH_SECRET
+
+from app.security.passwords import hash_password  # noqa: E402 - stdlib only, after env setup
+
+os.environ["OWNER_PASSWORD_HASH"] = hash_password(TEST_PASSWORD)
 
 
 @pytest.fixture(scope="session")
@@ -89,5 +94,21 @@ def client(db_session: Any) -> Iterator[Any]:
 
 
 @pytest.fixture
+def app_client() -> Iterator[Any]:
+    """A client for endpoints that never touch the database (auth, health checks)."""
+    from fastapi.testclient import TestClient
+
+    from app.api import auth
+    from app.main import create_app
+
+    auth.throttle.__init__()  # fresh failure counts per test
+    with TestClient(create_app()) as c:
+        yield c
+
+
+@pytest.fixture
 def auth_headers() -> dict[str, str]:
-    return {"Authorization": f"Bearer {TEST_AUTH_SECRET}"}
+    from app.security import tokens
+
+    token, _ = tokens.issue(TEST_AUTH_SECRET, ttl_seconds=3600)
+    return {"Authorization": f"Bearer {token}"}
