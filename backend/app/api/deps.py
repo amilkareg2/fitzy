@@ -1,38 +1,43 @@
 """Shared FastAPI dependencies."""
 
-import hmac
 from typing import Annotated
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Cookie, Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
 from app.config import Settings, get_settings
 from app.db import get_session
+from app.security import tokens
 
 SessionDep = Annotated[Session, Depends(get_session)]
 SettingsDep = Annotated[Settings, Depends(get_settings)]
 
+SESSION_COOKIE = "fitzy_session"
+
 _bearer = HTTPBearer(auto_error=False)
 
 
-def require_owner(
+def current_session(
     settings: SettingsDep,
     credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(_bearer)],
-) -> str:
-    """Single-user auth placeholder: ``Authorization: Bearer <AUTH_SECRET>``.
-
-    Returns the owner's email. To be replaced by the real M0 login flow; routers depend on
-    ``OwnerDep`` so the swap does not touch them.
-    """
-    expected = settings.auth_secret.get_secret_value().encode()
-    if credentials is None or not hmac.compare_digest(credentials.credentials.encode(), expected):
+    cookie_token: Annotated[str | None, Cookie(alias=SESSION_COOKIE)] = None,
+) -> tokens.Session:
+    """The owner's session, from the session cookie (browser) or a Bearer token (CLI, MCP)."""
+    token = credentials.credentials if credentials is not None else cookie_token
+    session = tokens.verify(token, settings.auth_secret.get_secret_value()) if token else None
+    if session is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Not authenticated",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    return settings.owner_email
+    return session
+
+
+def require_owner(session: Annotated[tokens.Session, Depends(current_session)]) -> str:
+    """Single-user auth: any valid session belongs to the owner."""
+    return tokens.SUBJECT
 
 
 OwnerDep = Annotated[str, Depends(require_owner)]

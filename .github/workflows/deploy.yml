@@ -67,18 +67,23 @@ jobs:
 
       - uses: google-github-actions/setup-gcloud@v3
 
-      # The Neon connection string is added by the owner by hand (bootstrap README,
-      # step 3). Fail early with a clear message instead of a Terraform "not found".
-      # Only lists version metadata; the deployer cannot read the value.
-      - name: Check database secret has a version
+      # The Neon connection string and the owner's password hash are added by the owner
+      # by hand (infra/bootstrap/README.md). Fail early with a clear message instead of a
+      # Terraform "not found". Only lists version metadata; the deployer cannot read values.
+      - name: Check hand-added secrets have a version
         run: |
-          latest="$(gcloud secrets versions list fitzy-database-url --project "$PROJECT_ID" \
-            --filter="state=ENABLED" --sort-by="~createTime" --limit=1 --format="value(name)")"
-          if [ -z "$latest" ]; then
-            echo "::error::Secret fitzy-database-url has no enabled version. Add the Neon connection string (infra/bootstrap/README.md, step 3)."
-            exit 1
-          fi
-          echo "fitzy-database-url latest enabled version: ${latest##*/}"
+          missing=0
+          for secret in fitzy-database-url fitzy-owner-password-hash; do
+            latest="$(gcloud secrets versions list "$secret" --project "$PROJECT_ID" \
+              --filter="state=ENABLED" --sort-by="~createTime" --limit=1 --format="value(name)")"
+            if [ -z "$latest" ]; then
+              echo "::error::Secret $secret has no enabled version. See infra/bootstrap/README.md."
+              missing=1
+            else
+              echo "$secret latest enabled version: ${latest##*/}"
+            fi
+          done
+          exit "$missing"
 
       - name: Build and push API image
         run: |

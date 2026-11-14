@@ -7,14 +7,14 @@ FastAPI + SQLAlchemy 2 + Alembic on Postgres 16 (+ pgvector), managed with [uv](
 ```bash
 docker compose up -d db              # from the repo root: Postgres 16 + pgvector on :5432
 cd backend
-cp ../.env.example .env              # DATABASE_URL, APP_ENV, AUTH_SECRET, OWNER_EMAIL
+cp ../.env.example .env              # DATABASE_URL, APP_ENV, AUTH_SECRET, OWNER_PASSWORD_HASH
 uv sync
 uv run alembic upgrade head
 uv run uvicorn app.main:app --reload # http://localhost:8000/health, /docs
 ```
 
 Settings (`app/config.py`) come from env vars or `.env`. `postgres://` / `postgresql://` URLs are
-rewritten to the psycopg 3 driver. Outside `local`/`test`, `AUTH_SECRET` must be 32+ random chars.
+rewritten to the psycopg 3 driver. Outside `local`/`test`, `AUTH_SECRET` must be 32+ random chars and `OWNER_PASSWORD_HASH` a scrypt hash (`python3 app/security/passwords.py`).
 
 ## Tests and lint
 
@@ -33,7 +33,8 @@ TEST_DATABASE_URL=postgresql+psycopg://fitzy:fitzy@localhost:5432/fitzy_test uv 
 | Path | What |
 | --- | --- |
 | `app/main.py` | App factory; `GET /health` (always 200, reports `db: ok/unavailable`) |
-| `app/api/` | Thin routers. `GET /exercises` (needs `Authorization: Bearer $AUTH_SECRET`, a placeholder for M0 auth) |
+| `app/api/` | Thin routers. `POST /auth/login` (password → session cookie + Bearer token), `/auth/me`, `/auth/logout`; every other route except `/health` needs the session |
+| `app/security/` | Stdlib-only scrypt password hashing, HMAC-signed session tokens, failed-login throttle |
 | `app/schemas/` | Pydantic response/request models; routers never return ORM objects |
 | `app/services/` | Business logic shared with the MCP server and coach: `units.py` (kg/lb), `e1rm.py` (Epley) |
 | `app/models/` | SQLAlchemy models, one file per area |
@@ -58,7 +59,7 @@ TEST_DATABASE_URL=postgresql+psycopg://fitzy:fitzy@localhost:5432/fitzy_test uv 
 
 ```bash
 docker build -t fitzy-api backend/
-docker run -p 8080:8080 -e DATABASE_URL=... -e AUTH_SECRET=... fitzy-api
+docker run -p 8080:8080 -e DATABASE_URL=... -e AUTH_SECRET=... -e OWNER_PASSWORD_HASH=... fitzy-api
 ```
 
 Slim, non-root, listens on `$PORT` (Cloud Run). Migrations are not run on start-up; run

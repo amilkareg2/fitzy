@@ -15,7 +15,8 @@ What `terraform apply` here creates in project `mymancave`, region `europe-west1
 | Artifact Registry `fitzy` (Docker) | Images pushed by CI; cleanup keeps the 10 newest, deletes others after 30 days |
 | Secret `fitzy-database-url` (empty) | Neon connection string; you add the value in step 3 |
 | Secret `fitzy-auth-secret` (empty) | App signing secret; CI generates and stores the value |
-| SA `fitzy-runtime` | Identity of the Cloud Run service and migration job; can read exactly the two secrets above, nothing else |
+| Secret `fitzy-owner-password-hash` (empty) | Hash of your login password; you add it in step 3b |
+| SA `fitzy-runtime` | Identity of the Cloud Run service and migration job; can read exactly the secrets above, nothing else |
 | SA `fitzy-deployer` | Identity CI impersonates; roles are listed and justified in `main.tf` |
 | WIF pool `fitzy-github` + provider `github-oidc` | Accepts GitHub OIDC tokens only from `amilkareg2/fitzy` on `refs/heads/main` |
 
@@ -94,6 +95,23 @@ gcloud secrets versions list fitzy-database-url
 way, then redeploy (**Actions → Deploy → Run workflow** on `main`). Each deploy pins
 the service to the latest version; running revisions keep the one they started with.
 Then disable the old version: `gcloud secrets versions disable <N> --secret fitzy-database-url`.
+
+### 3b. Add your login password (as a hash)
+
+The app has one user, you, and logs you in with a password. Only a scrypt **hash** of it
+is stored; the password itself never leaves Cloud Shell. Still in Cloud Shell, from the
+repo root (`~/fitzy`), with at least 12 characters:
+
+```bash
+python3 backend/app/security/passwords.py | tr -d '\n' > /tmp/fitzy-hash   # asks twice
+gcloud secrets versions add fitzy-owner-password-hash --data-file=/tmp/fitzy-hash --project mymancave
+rm /tmp/fitzy-hash
+```
+
+To change the password later, run the same three lines, then redeploy (Actions → CI → Run
+workflow on `main`, or merge any backend change). Sessions last 90 days; to sign out
+every device at once, rotate the signing secret (`terraform apply -replace=random_password.auth_secret`
+in `infra/main`, run by CI).
 
 ### 4. Set the GitHub repository variables
 

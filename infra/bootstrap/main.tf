@@ -124,13 +124,16 @@ resource "google_service_account" "deployer" {
 
 locals {
   secrets = {
-    database_url = "fitzy-database-url"
-    auth_secret  = "fitzy-auth-secret"
+    database_url        = "fitzy-database-url"
+    auth_secret         = "fitzy-auth-secret"
+    owner_password_hash = "fitzy-owner-password-hash"
   }
 
   deployer_secret_roles = {
-    "database_url/viewer"        = { secret = "database_url", role = "roles/secretmanager.viewer" }
-    "auth_secret/viewer"         = { secret = "auth_secret", role = "roles/secretmanager.viewer" }
+    "database_url/viewer" = { secret = "database_url", role = "roles/secretmanager.viewer" }
+    "auth_secret/viewer"  = { secret = "auth_secret", role = "roles/secretmanager.viewer" }
+    # Added by the owner by hand, like the database URL: CI sees version metadata only.
+    "owner_password_hash/viewer" = { secret = "owner_password_hash", role = "roles/secretmanager.viewer" }
     "auth_secret/versionmanager" = { secret = "auth_secret", role = "roles/secretmanager.secretVersionManager" }
     "auth_secret/accessor"       = { secret = "auth_secret", role = "roles/secretmanager.secretAccessor" }
   }
@@ -154,7 +157,7 @@ resource "google_secret_manager_secret" "app" {
   depends_on = [google_project_service.apis]
 }
 
-# The runtime SA (Cloud Run service + migration job) reads exactly these two secrets.
+# The runtime SA (Cloud Run service + migration job) reads exactly these secrets.
 resource "google_secret_manager_secret_iam_member" "runtime_access" {
   for_each = local.secrets
 
