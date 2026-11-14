@@ -45,9 +45,14 @@ variable "max_instances" {
 }
 
 variable "app_env" {
-  description = "Value of APP_ENV in Cloud Run."
+  description = "Value of APP_ENV in Cloud Run. Must be one the app accepts (backend/app/config.py)."
   type        = string
-  default     = "production"
+  default     = "prod"
+
+  validation {
+    condition     = contains(["dev", "prod"], var.app_env)
+    error_message = "app_env must be \"dev\" or \"prod\" (the values backend/app/config.py accepts for a deployed app)."
+  }
 }
 
 variable "owner_email" {
